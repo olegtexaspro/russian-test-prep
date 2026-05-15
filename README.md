@@ -1,6 +1,6 @@
 # Russian Test Prep Dashboard
 
-🌐 **Live demo:** https://olegtexaspro.github.io/russian-test-prep/
+🌐 **Live demo:** https://olegtexaspro.github.io/russian-test-prep/russian-test-prep.html
 
 A browser-based practice dashboard for the **STAMP Russian test** (targeting Level 5+ for 2 world-language credits).
 
