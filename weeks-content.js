@@ -218,7 +218,7 @@ const resourcesData = [
     { icon: '📝', title: 'Russian for Free', url: 'https://www.russianforfree.com/texts.php', desc: 'Texts with audio and vocabulary lists' },
     { icon: '📖', title: 'Pa-Russki Stories', url: 'https://pa-russki.com/stories-and-novels/russian-short-stories-on-line/', desc: 'Short stories for all levels' },
     { icon: '🎬', title: 'Easy Russian YouTube', url: 'https://www.youtube.com/@EasyRussianVideos', desc: 'Street interviews with Russian subtitles' },
-    { icon: '⌨️', title: 'Russian Keyboard Setup', url: 'https://support.microsoft.com/en-us/windows/how-to-set-up-and-use-languages-in-windows-cca5b553-7d28-9fb5-8a56-e8b16e3f9f4a', desc: 'Windows Russian keyboard installation guide' }
+    { icon: '⌨️', title: 'Russian Keyboard Setup', url: 'https://support.microsoft.com/en-us/windows/manage-the-language-and-keyboard-input-layout-settings-in-windows-12a10cb4-8626-9b77-0ccb-5013e0c7c7a2', desc: 'Windows language & keyboard layout setup guide' }
 ];
 
 // Generate HTML for weeks
