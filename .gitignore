@@ -1,0 +1,30 @@
+# Backup files (timestamped, created by editing tools)
+*.backup-*
+*.bak
+
+# Local config / secrets (never commit real API keys)
+config.local.js
+secrets.json
+.env
+.env.local
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# Claude Code workspace files
+.claude/
+
+# Logs
+*.log
+
+# Node (in case anyone adds tooling later)
+node_modules/
+package-lock.json

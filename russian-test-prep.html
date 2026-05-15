@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russian Test Prep Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 Russian Test Prep Dashboard</h1>
+            <p>Your 12-Week Sprint to 2 Language Credits!</p>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-value" id="current-week">Week 1</div>
+                <div class="stat-label">Current Week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="tasks-completed">0</div>
+                <div class="stat-label">Tasks Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-value" id="streak">0</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏰</div>
+                <div class="stat-value">30 min</div>
+                <div class="stat-label">Daily Time</div>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div class="progress-header">📈 Overall Progress</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="main-progress" style="width: 0%">0%</div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="button-rows-container">
+            <!-- Row 1: Weekly Schedule -->
+            <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #e0e0e0;">
+                <button class="tab-button active" onclick="showWeek('week1')">Weeks 1-2</button>
+                <button class="tab-button" onclick="showWeek('week3')">Weeks 3-4</button>
+                <button class="tab-button" onclick="showWeek('week5')">Weeks 5-6</button>
+                <button class="tab-button" onclick="showWeek('week7')">Week 7</button>
+                <button class="tab-button" onclick="showWeek('week8')">Weeks 8-9</button>
+                <button class="tab-button" onclick="showWeek('week10')">Weeks 10-11</button>
+                <button class="tab-button" onclick="showWeek('week12')">Week 12</button>
+            </div>
+
+            <!-- Row 2: Core Practice Modules -->
+            <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #e0e0e0;">
+                <button class="tab-button" onclick="showWeek('reading')">📖 Reading</button>
+                <button class="tab-button" onclick="showWeek('listening')">🎧 Listening</button>
+                <button class="tab-button" onclick="showWeek('writing')">✍️ Writing</button>
+                <button class="tab-button" onclick="showWeek('speaking')">🎤 Speaking</button>
+                <button class="tab-button" onclick="showWeek('grammar')">📝 Grammar</button>
+            </div>
+
+            <!-- Row 3: Support Tools -->
+            <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                <button class="tab-button" onclick="showWeek('vocab')">📚 Vocabulary</button>
+                <button class="tab-button" onclick="showWeek('typing')">⌨️ Typing</button>
+                <button class="tab-button" onclick="showWeek('calendar')">📅 Calendar</button>
+                <button class="tab-button" onclick="showWeek('resources')">📚 Resources</button>
+                <button class="tab-button" onclick="showWeek('mocktest')" style="background: #e91e63; color: white; font-weight: bold;">🎯 Mock Test</button>
+                <button class="tab-button" onclick="showWeek('personal-drills')" style="background: #ff6f00; color: white; font-weight: bold;">⭐ My Drills</button>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Weeks container (populated by weeks-content.js) -->
+            <div id="weeks-container"></div>
+
+            <!-- Resources Tab -->
+            <div class="week-content" id="resources">
+                <div class="week-title">
+                    <span>📚</span>
+                    <span>Resources</span>
+                </div>
+                <div id="resources-list" class="resources-grid"></div>
+            </div>
+
+            <!-- Reading Tab -->
+            <div class="week-content" id="reading">
+                <div class="week-title">
+                    <span>📖</span>
+                    <span>Reading Comprehension Practice</span>
+                </div>
+                
+                <div style="margin: 20px 0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <button onclick="changeReadingLevel('novice')" class="go-button reading-level-btn" style="background: #667eea; color: white;">Novice Level</button>
+                    <button onclick="changeReadingLevel('intermediate')" class="go-button reading-level-btn">Intermediate Level</button>
+                    <button onclick="changeReadingLevel('advanced')" class="go-button reading-level-btn">🏆 Challenge (Bonus)</button>
+                    <span style="font-size: 0.85em; color: #888; font-style: italic;">Для дополнительной практики. Сначала пройдите Novice и Intermediate.</span>
+                </div>
+                
+                <div style="background: #fff3e0; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #ff9800;">
+                    <strong>📝 Stats:</strong> Passages Completed: <span id="reading-attempts">0</span> | Average Score: <span id="reading-avg-score">0%</span> | Average Time: ⏱️ <span id="reading-avg-time">0:00</span>
+                </div>
+                
+                <!-- Exercise List Container -->
+                <div id="reading-exercise-list-container" style="display: none;">
+                    <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <h3 style="color: #667eea; margin-bottom: 20px;">📋 Select a Passage</h3>
+                        <div id="reading-exercise-list"></div>
+                    </div>
+                </div>
+                
+                <div id="reading-content" style="display: none;">
+                    <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                        <div style="text-align: center; margin-bottom: 15px;">
+                            <button id="back-to-reading-list-btn" onclick="backToReadingList()" class="go-button" style="background: #9e9e9e;">
+                                ← Back to List
+                            </button>
+                        </div>
+                        
+                        <h2 id="passage-title" style="color: #667eea; margin-bottom: 10px;"></h2>
+                        <div id="passage-type" style="color: #999; font-size: 0.9em; margin-bottom: 20px;"></div>
+                        <div id="passage-text" style="font-size: 1.1em; line-height: 1.8; white-space: pre-wrap; font-family: 'Georgia', serif;"></div>
+                    </div>
+                    
+                    <h3 style="color: #667eea; margin: 30px 0 20px 0;">Comprehension Questions:</h3>
+                    <div id="reading-questions"></div>
+                </div>
+            </div>
+
+            <!-- Writing Practice Tab -->
+            <div class="week-content" id="writing">
+                <div class="week-title">
+                    <span>✍️</span>
+                    <span>Writing Practice</span>
+                </div>
+                
+                <div style="margin: 20px 0; display: flex; gap: 10px; align-items: center;">
+                    <button onclick="changeWritingLevel('novice')" class="go-button writing-level-btn" style="background: #667eea; color: white;">Novice Level</button>
+                    <button onclick="changeWritingLevel('intermediate')" class="go-button writing-level-btn">Intermediate Level</button>
+                </div>
+                
+                <div style="background: #fff3e0; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #ff9800;">
+                    <strong>📝 Stats:</strong> Prompts Completed: <span id="writing-completed">0</span> | Average Words: <span id="writing-avg-words">0</span>
+                </div>
+                
+                <!-- Prompt List Container -->
+                <div id="writing-prompt-list-container">
+                    <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <h3 style="color: #667eea; margin-bottom: 20px;">📋 Select a Writing Prompt</h3>
+                        <div id="writing-prompt-list"></div>
+                    </div>
+                </div>
+                
+                <!-- Writing Content -->
+                <div id="writing-content" style="display: none;"></div>
+            </div>
+
+            <!-- Listening Tab -->
+            <div class="week-content" id="listening">
+                <div class="week-title">
+                    <span>🎧</span>
+                    <span>Listening Comprehension Practice</span>
+                </div>
+                
+                <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #2196f3;">
+                    <strong>📱 How it works:</strong> Click "Play Audio" to hear Russian text. You can listen up to 2 times, just like the real STAMP test!
+                </div>
+
+                <div style="margin: 20px 0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <button onclick="changeListeningLevel('novice')" class="go-button level-btn" style="background: #667eea; color: white;">Novice Level</button>
+                    <button onclick="changeListeningLevel('intermediate')" class="go-button level-btn">Intermediate Level</button>
+                    <button onclick="changeListeningLevel('advanced')" class="go-button level-btn">🏆 Challenge (Bonus)</button>
+                    <span style="font-size: 0.85em; color: #888; font-style: italic;">Для дополнительной практики. Сначала пройдите Novice и Intermediate.</span>
+                </div>
+                
+                <div style="background: #fff3e0; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #ff9800;">
+                    <strong>📝 Stats:</strong> Exercises Completed: <span id="listening-attempts">0</span> | Average Score: <span id="listening-avg-score">0%</span>
+                </div>
+                
+                <!-- Exercise List Container -->
+                <div id="exercise-list-container" style="display: none;">
+                    <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <h3 style="color: #667eea; margin-bottom: 20px;">📋 Select an Exercise</h3>
+                        <div id="exercise-list"></div>
+                    </div>
+                </div>
+                
+                <div id="listening-content" style="display: none;">
+                    <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px;">
+                        <div style="text-align: center; margin-bottom: 15px;">
+                            <button id="back-to-list-btn" onclick="backToExerciseList()" class="go-button" style="background: #9e9e9e;">
+                                ← Back to List
+                            </button>
+                        </div>
+                        
+                        <h2 id="listening-title" style="color: #667eea; margin-bottom: 10px;"></h2>
+                        <div id="listening-type" style="color: #999; font-size: 0.9em; margin-bottom: 20px;"></div>
+                        
+                        <div id="listening-instructions" style="background: #f0f7ff; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                            <p style="font-size: 1.1em; margin: 0;">
+                                <strong>Instructions:</strong> Click the button below to play the audio. Listen carefully - you can play it 2 times maximum. Then answer the questions.
+                            </p>
+                        </div>
+                        
+                        <div style="text-align: center; margin: 30px 0;">
+                            <button id="play-audio-btn" onclick="playListeningAudio()" class="go-button" style="font-size: 1.3em; padding: 20px 40px; background: #4caf50;">
+                                🔊 Play Audio (<span id="plays-left">2</span> plays left)
+                            </button>
+                        </div>
+                        
+                        <div style="text-align: center; margin: 20px 0;">
+                            <button id="show-transcript-btn" onclick="showTranscript()" class="go-button" style="background: #ff9800;">
+                                📄 Show Transcript (if needed)
+                            </button>
+                        </div>
+                        
+                        <div id="listening-transcript" style="display: none; background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #ff9800;">
+                            <h4>Transcript (have someone read this aloud to you):</h4>
+                            <p id="transcript-text" style="font-size: 1.1em; line-height: 1.8; white-space: pre-wrap;"></p>
+                        </div>
+                    </div>
+                    
+                    <div id="listening-questions" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Typing Tab -->
+            <div class="week-content" id="typing">
+                <div class="week-title">
+                    <span>⌨️</span>
+                    <span>Typing Speed Test</span>
+                </div>
+                
+                <div class="typing-test">
+                    <div id="text-to-type" style="font-size: 1.3em; margin: 20px 0; padding: 20px; background: #f0f0f0; border-radius: 10px;"></div>
+                    
+                    <textarea id="typing-input" 
+                              placeholder="Start typing here..."
+                              style="width: 100%; height: 100px; font-size: 1.2em; padding: 15px; border-radius: 10px; border: 2px solid #667eea;"></textarea>
+                    
+                    <div style="display: flex; justify-content: space-between; margin: 20px 0;">
+                        <div>Timer: <span id="typing-timer">0s</span></div>
+                        <button onclick="loadNewText()" class="go-button">New Text</button>
+                    </div>
+                    
+                    <div id="typing-results" style="display: none; padding: 20px; background: #e8f5e9; border-radius: 10px; margin: 20px 0;">
+                        <h3>Results:</h3>
+                        <p>WPM: <strong id="wpm-result">0</strong></p>
+                        <p>Accuracy: <strong id="accuracy-result">0</strong>%</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 40px;">Your Progress</h3>
+                <div id="chart-bars" style="display: flex; gap: 10px; align-items: flex-end; height: 200px; padding: 20px; background: #f8f9ff; border-radius: 10px;"></div>
+            </div>
+
+            <!-- Grammar Tab -->
+            <div class="week-content" id="grammar">
+                <div class="week-title">
+                    <span>📝</span>
+                    <span>Grammar Quiz</span>
+                </div>
+
+                <div id="quiz-start">
+                    <p>Test your Russian grammar knowledge with 10 random questions.</p>
+                    <button onclick="startQuiz()" class="go-button" style="font-size: 1.2em; padding: 15px 30px;">Start Quiz</button>
+                    <div style="margin-top: 20px;">
+                        <p>Quiz attempts: <span id="quiz-attempts">0</span></p>
+                        <p>Average score: <span id="avg-score">0%</span></p>
+                    </div>
+                </div>
+
+                <div id="quiz-content" style="display: none;">
+                    <div id="question-number" style="color: #667eea; font-weight: bold;"></div>
+                    <div id="question-text" style="font-size: 1.3em; margin: 20px 0;"></div>
+                    <div id="quiz-options" style="display: grid; gap: 10px;"></div>
+                    <div id="quiz-feedback" style="margin: 20px 0;"></div>
+                    <button id="next-question" onclick="nextQuestion()" class="go-button" style="display: none;">Next Question</button>
+                </div>
+
+                <div id="quiz-results" style="display: none;">
+                    <h2>Quiz Complete!</h2>
+                    <p style="font-size: 2em;">Score: <span id="quiz-score"></span></p>
+                    <p style="font-size: 1.5em;"><span id="quiz-percentage"></span></p>
+                    <p id="quiz-message" style="font-size: 1.2em; margin: 20px 0;"></p>
+                    <button onclick="restartQuiz()" class="go-button">Try Again</button>
+                </div>
+
+                <h2 style="margin-top: 40px;">📖 Grammar Reference</h2>
+                <div id="grammar-reference" style="margin-top: 20px;"></div>
+            </div>
+
+            <!-- Vocabulary Tab -->
+            <div class="week-content" id="vocab">
+                <div class="week-title">
+                    <span>📚</span>
+                    <span>Vocabulary</span>
+                </div>
+
+                <!-- Level Selector -->
+                <div style="margin: 20px 0; display: flex; gap: 10px; align-items: center;">
+                    <button onclick="changeVocabLevel('novice')" class="go-button vocab-level-btn" style="background: #667eea; color: white;">Novice Level</button>
+                    <button onclick="changeVocabLevel('intermediate')" class="go-button vocab-level-btn">Intermediate Level</button>
+                    <button onclick="changeVocabLevel('phrases')" class="go-button vocab-level-btn">Phrases</button>
+                </div>
+
+                <!-- Category Buttons (dynamic based on level) -->
+                <div id="category-buttons" style="margin: 20px 0;">
+                    <button onclick="displayVocabularyCategory('essential')" class="go-button vocab-cat-btn">Essential</button>
+                    <button onclick="displayVocabularyCategory('verbs')" class="go-button vocab-cat-btn">Verbs</button>
+                    <button onclick="displayVocabularyCategory('adjectives')" class="go-button vocab-cat-btn">Adjectives</button>
+                    <button onclick="displayVocabularyCategory('school')" class="go-button vocab-cat-btn">School/Academic</button>
+                    <button onclick="displayVocabularyCategory('time')" class="go-button vocab-cat-btn">Time/Society</button>
+                    <button onclick="displayVocabularyCategory('connectors')" class="go-button vocab-cat-btn">Connectors</button>
+                    <button onclick="displayVocabularyCategory('numbers')" class="go-button vocab-cat-btn">Numbers</button>
+                </div>
+
+                <p style="font-size: 1.1em; font-weight: bold; color: #667eea;">Items learned: <span id="vocab-learned">0</span></p>
+
+                <div id="vocab-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;"></div>
+            </div>
+
+            <!-- Speaking Tab -->
+            <div class="week-content" id="speaking">
+                <div class="week-title">
+                    <span>🎤</span>
+                    <span>Speaking Practice</span>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <button onclick="setPromptCategory('personal')" class="go-button category-btn active">Personal</button>
+                    <button onclick="setPromptCategory('school')" class="go-button category-btn">School</button>
+                    <button onclick="setPromptCategory('daily')" class="go-button category-btn">Daily Life</button>
+                    <button onclick="setPromptCategory('opinion')" class="go-button category-btn">Opinion</button>
+                </div>
+                
+                <div style="padding: 20px; background: #f8f9ff; border-radius: 10px; margin: 20px 0;">
+                    <h3 id="russian-prompt" style="color: #667eea;"></h3>
+                    <p id="english-prompt" style="color: #666;"></p>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin: 20px 0; align-items: center;">
+                    <button onclick="nextPrompt()" class="go-button">New Prompt</button>
+                    <div style="font-size: 1.8em; font-weight: bold; color: #667eea; margin-left: 20px; padding: 10px 20px; background: white; border-radius: 10px; border: 2px solid #667eea;">
+                        ⏱️ <span id="speaking-timer">1:30</span>
+                    </div>
+                </div>
+                
+                <p style="color: #666; font-style: italic; margin-bottom: 20px;">Timer starts automatically when you begin recording</p>
+                
+                <h3>Voice Recorder</h3>
+                <div style="margin: 20px 0;">
+                    <button id="start-recording" onclick="startRecording()" class="go-button">🔴 Start Recording</button>
+                    <button id="stop-recording" onclick="stopRecording()" class="go-button" style="display: none;">⏹️ Stop Recording</button>
+                    <span id="recording-status" style="margin-left: 10px; color: red; font-weight: bold;"></span>
+                </div>
+                
+                <div id="playback-section" style="display: none; margin: 20px 0; padding: 20px; background: #e8f5e9; border-radius: 10px;">
+                    <h4>Your Recording:</h4>
+                    <audio id="audio-playback" controls style="width: 100%;"></audio>
+                    <button id="download-recording" class="go-button" style="margin-top: 10px;">⬇️ Download Recording</button>
+                </div>
+            </div>
+
+            <!-- Calendar Tab -->
+            <div class="week-content" id="calendar">
+                <div class="week-title">
+                    <span>📅</span>
+                    <span>Weeks, Months & Calendar</span>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <button onclick="displayCalendarSection('days')" class="go-button">Days of Week</button>
+                    <button onclick="displayCalendarSection('months')" class="go-button">Months</button>
+                    <button onclick="displayCalendarSection('seasons')" class="go-button">Seasons</button>
+                    <button onclick="displayCalendarSection('expressions')" class="go-button">Time Expressions</button>
+                </div>
+                
+                <div id="calendar-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0;"></div>
+                
+                <h2 style="margin-top: 40px;">📝 Calendar Quiz</h2>
+                
+                <div id="calendar-quiz-start">
+                    <p>Test your knowledge of days, months, and time expressions!</p>
+                    <button onclick="startCalendarQuiz()" class="go-button" style="font-size: 1.2em; padding: 15px 30px;">Start Quiz</button>
+                    <div style="margin-top: 20px;">
+                        <p>Quiz attempts: <span id="calendar-quiz-attempts">0</span></p>
+                        <p>Average score: <span id="calendar-avg-score">0%</span></p>
+                    </div>
+                </div>
+                
+                <div id="calendar-quiz-content" style="display: none;">
+                    <div id="calendar-question-number" style="color: #667eea; font-weight: bold;"></div>
+                    <div id="calendar-question-text" style="font-size: 1.3em; margin: 20px 0;"></div>
+                    <div id="calendar-quiz-options"></div>
+                    <div id="calendar-quiz-feedback" style="margin: 20px 0;"></div>
+                    <button id="calendar-next-question" onclick="nextCalendarQuestion()" class="go-button" style="display: none;">Next Question</button>
+                </div>
+                
+                <div id="calendar-quiz-results" style="display: none;">
+                    <h2>Quiz Complete!</h2>
+                    <p style="font-size: 2em;">Score: <span id="calendar-quiz-score"></span></p>
+                    <p style="font-size: 1.5em;"><span id="calendar-quiz-percentage"></span></p>
+                    <p id="calendar-quiz-message" style="font-size: 1.2em; margin: 20px 0;"></p>
+                    <button onclick="restartCalendarQuiz()" class="go-button">Try Again</button>
+                </div>
+            </div>
+
+            <!-- Mock Test Tab -->
+            <div class="week-content" id="mocktest">
+                <div class="week-title">
+                    <span>🎯</span>
+                    <span>STAMP Russian Mock Test</span>
+                </div>
+
+                <div id="mocktest-container"></div>
+            </div>
+
+            <!-- Personal Drills Tab -->
+            <div class="week-content" id="personal-drills">
+                <div id="personal-drills-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Notification -->
+    <div id="achievement" class="achievement"></div>
+
+    <!-- Reset Button -->
+    <button class="reset-button" onclick="resetProgress()">🔄 Reset Progress</button>
+
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 20px 10px; margin-top: 30px; color: rgba(255,255,255,0.85); font-size: 0.9em; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+        © 2026 Oleg Korolev &nbsp;·&nbsp; Released under the
+        <a href="LICENSE" target="_blank" style="color: #ffffff; text-decoration: underline;">MIT License</a>
+    </footer>
+
+    <!-- Load all JavaScript modules -->
+    <script src="email-config.js"></script>
+    <script src="weeks-content.js"></script>
+    <script src="vocabulary.js"></script>
+    <script src="speaking.js"></script>
+    <script src="typing.js"></script>
+    <script src="grammar.js"></script>
+    <script src="calendar.js"></script>
+    <script src="reading.js"></script>
+    <script src="writing.js"></script>
+    <script src="listening.js"></script>
+    <script src="mocktest.js"></script>
+    <script src="personal-drills.js"></script>
+    
+    <script>
+        // Core functionality
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            const total = checkboxes.length;
+            const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const percentage = Math.round((checked / total) * 100);
+            
+            document.getElementById('main-progress').style.width = percentage + '%';
+            document.getElementById('main-progress').textContent = percentage + '%';
+            document.getElementById('tasks-completed').textContent = checked;
+            
+            // Save to localStorage
+            checkboxes.forEach(cb => {
+                localStorage.setItem(cb.id, cb.checked);
+            });
+            
+            // Update current week (1-12 based on overall progress)
+            const weekNumber = Math.min(Math.ceil((percentage / 100) * 12), 12) || 1;
+            document.getElementById('current-week').textContent = `Week ${weekNumber}`;
+            
+            checkStreak();
+        }
+
+        function showWeek(weekId) {
+            document.querySelectorAll('.week-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(weekId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+
+        function loadGrammarReference() {
+            const container = document.getElementById('grammar-reference');
+            
+            // Quick Reference
+            let html = `<div style="background: #f8f9ff; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #667eea;">${grammarReference.quickRef.title}</h3>
+                <table style="width: 100%; margin-top: 15px; border-collapse: collapse;">
+                    <tr style="background: #667eea; color: white;">
+                        <th style="padding: 10px; text-align: left;">Case</th>
+                        <th style="padding: 10px; text-align: left;">Questions</th>
+                        <th style="padding: 10px; text-align: left;">Usage</th>
+                        <th style="padding: 10px; text-align: left;">Example</th>
+                    </tr>`;
+            
+            grammarReference.quickRef.content.forEach(item => {
+                html += `<tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px;"><strong>${item.case}</strong></td>
+                    <td style="padding: 10px;">${item.question}</td>
+                    <td style="padding: 10px;">${item.usage}</td>
+                    <td style="padding: 10px; font-style: italic;">${item.example}</td>
+                </tr>`;
+            });
+            
+            html += `</table></div>`;
+            
+            // Verbs of Motion
+            html += `<div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #4caf50;">${grammarReference.verbsOfMotion.title}</h3>
+                <div style="margin-top: 15px;">`;
+            
+            grammarReference.verbsOfMotion.content.forEach(item => {
+                html += `<div style="background: white; padding: 12px; margin: 8px 0; border-radius: 8px;">
+                    <strong>${item.type}:</strong> <span style="color: #4caf50;">${item.verb}</span> - ${item.meaning}
+                    <br><em style="color: #666;">${item.example}</em>
+                </div>`;
+            });
+            
+            html += `</div></div>`;
+            
+            // Common Mistakes
+            html += `<div style="background: #ffebee; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #f44336;">${grammarReference.commonMistakes.title}</h3>`;
+            
+            grammarReference.commonMistakes.content.forEach(item => {
+                html += `<div style="background: white; padding: 12px; margin: 8px 0; border-radius: 8px;">
+                    <strong>${item.mistake}</strong><br>
+                    ✓ <span style="color: green;">${item.correct}</span><br>
+                    ✗ <span style="color: red;">${item.incorrect}</span>
+                </div>`;
+            });
+            
+            html += `</div>`;
+            
+            // Memory Tricks
+            html += `<div style="background: #fff9c4; padding: 20px; border-radius: 10px;">
+                <h3 style="color: #f57f17;">${grammarReference.memoryTricks.title}</h3>`;
+            
+            grammarReference.memoryTricks.content.forEach(item => {
+                html += `<div style="background: white; padding: 12px; margin: 8px 0; border-radius: 8px;">
+                    <strong style="color: #f57f17;">💡 ${item.trick}:</strong> ${item.tip}
+                </div>`;
+            });
+            
+            html += `</div>`;
+            
+            container.innerHTML = html;
+        }
+
+        function checkStreak() {
+            const today = new Date().toDateString();
+            const lastVisit = localStorage.getItem('lastVisitDate');
+            let streak = parseInt(localStorage.getItem('streak') || '0');
+            
+            if (lastVisit !== today) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (lastVisit === yesterday.toDateString()) {
+                    streak++;
+                } else if (lastVisit !== null) {
+                    streak = 1;
+                }
+                
+                localStorage.setItem('lastVisitDate', today);
+                localStorage.setItem('streak', streak);
+            }
+            
+            document.getElementById('streak').textContent = streak;
+        }
+
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress?')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function loadProgress() {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            checkboxes.forEach(cb => {
+                const saved = localStorage.getItem(cb.id);
+                if (saved === 'true') cb.checked = true;
+            });
+            updateProgress();
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            renderWeeks();
+            renderResources();
+            loadProgress();
+            initVocabulary();
+            initSpeaking();
+            initTypingTest();
+            initTypingChart();
+            initGrammarQuiz();
+            initCalendar();
+            initReading();
+            initWriting();
+            initListening();
+            initMockTest();
+            initPersonalDrills();
+            loadReadingStats();
+            loadListeningStats();
+            loadGrammarReference();
+            
+            document.getElementById('week1').classList.add('active');
+        };
+
+        function renderResources() {
+            const container = document.getElementById('resources-list');
+            resourcesData.forEach(resource => {
+                const card = document.createElement('a');
+                card.href = resource.url;
+                card.target = '_blank';
+                card.className = 'resource-card';
+                card.innerHTML = `
+                    <div class="resource-icon">${resource.icon}</div>
+                    <div class="resource-info">
+                        <div class="resource-title">${resource.title}</div>
+                        <div class="resource-url">${resource.desc}</div>
+                    </div>
+                    <button class="go-button">Go →</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
